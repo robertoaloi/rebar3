@@ -11,7 +11,9 @@
 
 -module(rebar_prv_build_info).
 
--export([init/1, do/1]).
+-behaviour(provider).
+
+-export([init/1, do/1, format_error/1]).
 
 -type app_build_opts() :: #{
     name := binary(),
@@ -29,15 +31,15 @@ init(State) ->
         State,
         providers:create([
             {name, build_info},
-            {module, rebar_prv_build_info},
+            {module, ?MODULE},
             {bare, true},
             {deps, [app_discovery]},
             {example, "rebar3 build_info"},
             {short_desc, "Get build_info"},
-            {desc, "Dump project information"},
+            {desc, "Dump build information"},
             {opts, [
                 {to, $t, "to", {string, undefined},
-                    "file to write buid_info in file"}
+                    "Which file to dump build information to"}
             ]}
         ])
     ),
@@ -48,6 +50,9 @@ do(State0) ->
     State1 = get_deps(State0),
     etf_build_info(State1, RawOpts),
     {ok, State1}.
+
+format_error(Reason) ->
+    io_lib:format("~p", [Reason]).
 
 get_deps(State0) ->
     {ok, State1} = rebar_prv_install_deps:do(State0),
