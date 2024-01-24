@@ -9,7 +9,7 @@
 %%% This source code is licensed under the Apache 2.0 license found in
 %%% the LICENSE file in the root directory of this source tree.
 
--module(rebar_prv_build_info).
+-module(rebar_prv_manifest).
 
 -behaviour(provider).
 
@@ -30,16 +30,16 @@ init(State) ->
     State1 = rebar_state:add_provider(
         State,
         providers:create([
-            {name, build_info},
+            {name, manifest},
             {module, ?MODULE},
             {bare, true},
             {deps, [app_discovery]},
-            {example, "rebar3 build_info"},
-            {short_desc, "Get build_info"},
-            {desc, "Dump build information"},
+            {example, "rebar3 manifest"},
+            {short_desc, "Get manifest"},
+            {desc, "Dump manifest"},
             {opts, [
                 {to, $t, "to", {string, undefined},
-                    "Which file to dump build information to"}
+                    "Which file to dump manifest to"}
             ]}
         ])
     ),
@@ -48,7 +48,7 @@ init(State) ->
 do(State0) ->
     {RawOpts, _} = rebar_state:command_parsed_args(State0),
     State1 = get_deps(State0),
-    etf_build_info(State1, RawOpts),
+    etf_manifest(State1, RawOpts),
     {ok, State1}.
 
 format_error(Reason) ->
@@ -69,7 +69,7 @@ get_data(State) ->
         source_root => list_to_binary(rebar_state:dir(State))
     }.
 
-etf_build_info(State, RawOpts) ->
+etf_manifest(State, RawOpts) ->
     Data = get_data(State),
 
     To = proplists:get_value(to, RawOpts),

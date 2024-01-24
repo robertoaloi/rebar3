@@ -1,4 +1,4 @@
--module(rebar_build_info_SUITE).
+-module(rebar_manifest_SUITE).
 
 -export([all/0,
          init_per_testcase/2,
@@ -26,5 +26,5 @@ end_per_testcase(_, Config) ->
 main(Config) ->
     Name = ?config(name, Config),
     rebar_test_utils:run_and_check(Config, [],
-                                   ["build_info"],
+                                   ["manifest"],
                                    {ok, [{app, Name}]}).
